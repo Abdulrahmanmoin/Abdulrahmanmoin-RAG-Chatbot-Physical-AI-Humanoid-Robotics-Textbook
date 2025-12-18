@@ -1,3 +1,12 @@
+---
+title: Physical Humanoid Book RAG Chatbot
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # RAG Chatbot Backend
 
 Backend API for the Physical AI & Humanoid Robotics Book RAG Chatbot. This service handles document retrieval, embedding generation, and response generation while ensuring all responses are grounded in the book content.
