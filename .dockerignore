@@ -1,0 +1,50 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache
+.coverage
+.coverage.*
+.pyup.yml
+.isort.cfg
+.tox
+.venv
+env/
+venv/
+.python-version
+requirements-dev.txt
+requirements-test.txt
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend specific
+.venv
+.venv_linux
+.env
+*.log
+*.tmp
+*.temp
+
+# Documents and other files
+*.md
+CLAUDE.md
+history/
+specs/
+docs/
