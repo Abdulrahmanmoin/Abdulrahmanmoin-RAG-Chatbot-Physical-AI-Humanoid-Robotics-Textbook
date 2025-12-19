@@ -1,6 +1,6 @@
+import logging
 import uuid
 import time
-import logging
 from typing import List, Optional, Dict, Any
 from ..models.query import QueryRequest, QueryResponse
 from ..models.document_models import RetrievedChunk
@@ -8,8 +8,6 @@ from ..services.retrieval_service import RetrievalService
 from ..services.validation_service import ValidationService
 from ..services.openrouter_service import OpenRouterService
 from ..config.settings import settings
-import logging
-import google.generativeai as genai
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +17,6 @@ class QueryService:
         self.retrieval_service = RetrievalService()
         self.validation_service = ValidationService()
         self.openrouter_service = OpenRouterService()
-        # genai.configure(api_key=settings.gemini_api_key)
-        # self.generative_model = genai.GenerativeModel('gemini-pro')  # Using Gemini Pro for generationed/Issues
-        self.generative_model = genai.GenerativeModel('gemini-1.5-flash') # Using Gemini 1.5 Flash
 
     async def process_query(self, query_request: QueryRequest) -> QueryResponse:
         """
@@ -67,17 +62,11 @@ class QueryService:
 
         # Validate context sufficiency
         try:
-            logger.info("Validating context sufficiency")
-            print(f"DEBUG: Retrieved {len(retrieved_chunks)} chunks in process_full_book_query", flush=True)
-            for i, chunk in enumerate(retrieved_chunks[:2]):
-                 print(f"DEBUG: Chunk {i} content preview: {chunk.content[:100]}...", flush=True)
-            
             is_sufficient, reason = self.validation_service.validate_context_sufficiency(
                 query_request.query,
                 retrieved_chunks
             )
             logger.info(f"Context sufficiency: {is_sufficient} ({reason})")
-            print(f"DEBUG: Context sufficiency: {is_sufficient} ({reason})", flush=True)
         except Exception as e:
             logger.error(f"Error in validate_context_sufficiency: {e}", exc_info=True)
             raise
@@ -103,19 +92,10 @@ class QueryService:
             response,
             retrieved_chunks
         )
-        print(f"DEBUG: Grounding Check Is Grounded: {is_grounded}", flush=True)
-        print(f"DEBUG: Validation Details: {validation_details}", flush=True)
 
         if not is_grounded:
-            # For now, we will log the validation warning but still return the response to avoid blocking valid answers
-            # due to strict lexical overlap checks.
             logger.warning(f"Response validation failed: {validation_details}")
-            print(f"DEBUG: Grounding verification failed but allowing response. Details: {validation_details}", flush=True)
-            
-            # Optional: Add a disclaimer to the response? 
-            # response += "\n\n(Note: This response may not be fully grounded in the exact text matches of the source material.)"
-            
-            # Proceed as success
+            # Proceed as success for now to avoid blocking
             pass
             
             # Previous rejection logic commented out:
@@ -270,7 +250,7 @@ class QueryService:
             )
             
             # response.text from Gemini became response_text here
-            response = type('obj', (object,), {'text': response_text}) # Mocking object to keep structure if needed, or just using string below# Calculate confidence based on similarity scores of retrieved chunks
+            # Calculate confidence based on similarity scores of retrieved chunks
             if retrieved_chunks:
                 avg_similarity = sum(chunk.similarity_score for chunk in retrieved_chunks) / len(retrieved_chunks)
                 # Normalize confidence score (0.0 to 1.0)
@@ -283,5 +263,5 @@ class QueryService:
         except Exception as e:
             # If generation fails, return a default refusal response
             error_msg = str(e)
-            print(f"DEBUG: Generation failed: {error_msg}", flush=True)
+            logger.error(f"Generation failed: {error_msg}")
             return f"I encountered an error while generating a response based on the book content. Error details: {error_msg}", 0.0

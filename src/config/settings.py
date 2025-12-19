@@ -9,9 +9,6 @@ class Settings(BaseSettings):
     openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
     openrouter_model: str = Field(default="google/gemini-pro", alias="OPENROUTER_MODEL")
     openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", alias="OPENROUTER_BASE_URL")
-    
-    # Keep gemini_api_key for backward compatibility during transition
-    gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
 
     # Qdrant Configuration
     qdrant_url: str = Field(default="http://localhost:6333", alias="QDRANT_URL")
