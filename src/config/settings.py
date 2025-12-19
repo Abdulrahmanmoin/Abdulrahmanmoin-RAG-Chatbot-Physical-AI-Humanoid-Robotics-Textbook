@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from typing import List, Optional
 import os
@@ -8,12 +8,13 @@ class Settings(BaseSettings):
     # API Keys
     openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
     openrouter_model: str = Field(default="google/gemini-pro", alias="OPENROUTER_MODEL")
+    openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", alias="OPENROUTER_BASE_URL")
+    
     # Keep gemini_api_key for backward compatibility during transition
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
 
     # Qdrant Configuration
     qdrant_url: str = Field(default="http://localhost:6333", alias="QDRANT_URL")
-
     qdrant_api_key: str = Field(default="", alias="QDRANT_API_KEY")
     qdrant_collection_name: str = Field(default="book_content_v2", alias="QDRANT_COLLECTION_NAME")
 
@@ -38,11 +39,6 @@ class Settings(BaseSettings):
 
     # Generation Configuration
     generation_temperature: float = Field(default=0.1, alias="GENERATION_TEMPERATURE")
-    
-    # OpenRouter Configuration (Added for fallback/alternative)
-    openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
-    openrouter_model: str = Field(default="mistralai/mistral-large-2411", alias="OPENROUTER_MODEL") # Using Mistral Large 3 (2411)
-    openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", alias="OPENROUTER_BASE_URL")
 
     @property
     def allowed_origins(self) -> List[str]:
@@ -58,9 +54,11 @@ class Settings(BaseSettings):
             ])
         return origins
 
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
 
 # Create settings instance

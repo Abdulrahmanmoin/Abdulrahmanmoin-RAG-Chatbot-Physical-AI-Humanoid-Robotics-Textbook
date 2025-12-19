@@ -1,23 +1,34 @@
+import logging
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from pydantic_settings import BaseSettings
-from pydantic import Field
-# import os
+from .settings import settings
 
-class Settings(BaseSettings):
-    # database_url: str = os.getenv("NEON_DATABASE_URL", "")
-    database_url: str = Field(default="", alias="NEON_DATABASE_URL")
+# Set up logging
+logger = logging.getLogger(__name__)
 
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
+# Validate database URL
+db_url = settings.database_url
+if not db_url:
+    # Check if it's in os.environ directly as a fallback
+    db_url = os.getenv("NEON_DATABASE_URL", "")
 
-settings = Settings()
+if not db_url:
+    logger.error("NEON_DATABASE_URL is not set! Database connection will fail.")
+    # Provide a more descriptive error for the user
+    raise ValueError(
+        "NEON_DATABASE_URL environment variable is missing. "
+        "Please set this in your Hugging Face Space secrets or .env file."
+    )
+
+# SQLAlchemy 1.4+ and 2.0 require 'postgresql://' instead of 'postgres://'
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
 
 # Create the database engine
 engine = create_engine(
-    settings.database_url,
+    db_url,
     pool_size=20,  # Number of connection objects to keep in the pool
     max_overflow=30,  # Number of connections that can be created beyond pool_size
     pool_pre_ping=True,  # Verify connections before using them
