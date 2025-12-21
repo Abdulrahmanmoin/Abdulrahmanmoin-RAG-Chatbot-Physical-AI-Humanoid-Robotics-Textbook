@@ -7,7 +7,7 @@ import os
 class Settings(BaseSettings):
     # API Keys
     openrouter_api_key: str = Field(default="", alias="OPENROUTER_API_KEY")
-    openrouter_model: str = Field(default="google/gemini-pro", alias="OPENROUTER_MODEL")
+    openrouter_model: str = Field(default="mistralai/mistral-7b-instruct", alias="OPENROUTER_MODEL")
     openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", alias="OPENROUTER_BASE_URL")
 
     # Qdrant Configuration

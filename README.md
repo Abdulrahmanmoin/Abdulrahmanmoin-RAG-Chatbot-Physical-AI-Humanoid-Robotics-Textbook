@@ -72,7 +72,7 @@ NEON_DATABASE_URL=your_neon_postgres_connection_string
 # OpenRouter API (Primary LLM service - supports multiple models including Gemini)
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 # Optional: Specify the model to use (default: google/gemini-pro)
-OPENROUTER_MODEL=google/gemini-pro
+OPENROUTER_MODEL=mistralai/mistral-7b-instruct
 
 # Application Configuration
 APP_ENV=development
@@ -153,7 +153,7 @@ Check if the service is running.
 | `QDRANT_COLLECTION_NAME` | Qdrant collection name | `book_content` |
 | `NEON_DATABASE_URL` | PostgreSQL connection string | - |
 | `OPENROUTER_API_KEY` | OpenRouter API key | - |
-| `OPENROUTER_MODEL` | Model to use (e.g., google/gemini-pro) | `google/gemini-pro` |
+| `OPENROUTER_MODEL` | Model to use (e.g., mistralai/mistral-7b-instruct) | `mistralai/mistral-7b-instruct` |
 | `APP_ENV` | Environment (development/production) | `development` |
 | `LOG_LEVEL` | Logging level | `info` |
 | `MAX_QUERY_LENGTH` | Maximum query length in characters | `1000` |
