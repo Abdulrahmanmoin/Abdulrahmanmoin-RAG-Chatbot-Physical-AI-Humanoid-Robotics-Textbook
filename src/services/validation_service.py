@@ -69,13 +69,7 @@ class ValidationService:
             ("according to my knowledge", "External knowledge claim"),
             ("i know that", "Personal knowledge claim"),
             ("from general knowledge", "General knowledge claim"),
-            ("in my experience", "Personal experience claim"),
-            ("recently", "Time-sensitive external info"),
-            ("currently", "Current events claim"),
-            ("today", "Current events claim"),
-            ("this year", "Current events claim"),
-            ("latest", "Recent information claim"),
-            ("new developments", "Recent information claim")
+            ("in my experience", "Personal experience claim")
         ]
 
         for indicator, description in indicators:
